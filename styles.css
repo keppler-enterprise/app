@@ -8,7 +8,8 @@
     --planet-secondary: rgba(34, 89, 195, 0.15);
     --planet-tertiary: rgba(22, 44, 127, 0.1);
     --glow-intensity: 0.3;
-    --rotation-speed: 80s;
+    --rotation-speed: 120s;
+    --neon-border: 0 0 5px var(--primary-color), 0 0 10px var(--glow-color);
 }
 
 * {
@@ -17,29 +18,60 @@
     box-sizing: border-box;
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap');
+
 body {
     background: var(--background-color);
     color: var(--text-color);
-    font-family: 'Arial', sans-serif;
+    font-family: 'Rajdhani', sans-serif;
     min-height: 100vh;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background-image: 
+        radial-gradient(circle at 10% 20%, rgba(0, 247, 255, 0.03) 0%, transparent 20%),
+        radial-gradient(circle at 80% 70%, rgba(255, 45, 117, 0.03) 0%, transparent 20%),
+        linear-gradient(rgba(3, 0, 20, 1), rgba(6, 0, 40, 1));
 }
 
-/* Header Styles */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        linear-gradient(90deg, rgba(0, 247, 255, 0.03) 1px, transparent 1px) 0 0,
+        linear-gradient(rgba(0, 247, 255, 0.03) 1px, transparent 1px) 0 0;
+    background-size: 30px 30px;
+    z-index: -2;
+    animation: gridPulse 8s infinite linear;
+}
+
+@keyframes gridPulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.6; }
+}
+
 header {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     z-index: 1000;
-    padding: 15px 0;
-    background: rgba(3, 0, 20, 0.8);
-    backdrop-filter: blur(10px);
+    padding: 20px 0;
+    background: transparent;
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid rgba(0, 247, 255, 0.1);
 }
 
 .container {
     width: 100%;
-    max-width: 1800px; /* Increased for larger desktop */
+    max-width: 1800px;
     margin: 0 auto;
     padding: 0 20px;
 }
@@ -52,6 +84,7 @@ header {
 
 .logo {
     text-align: center;
+    position: relative;
 }
 
 .logo img {
@@ -65,24 +98,125 @@ header {
     filter: drop-shadow(0 0 20px var(--glow-color));
 }
 
-/* Planet Styles - Responsive adjustments */
-.planet-container {
-    position: fixed;
-    top: 0;
-    left: 0;
+.login-container {
+    position: relative;
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.login-box {
+    background: rgba(3, 0, 20, 0.4);
+    backdrop-filter: blur(10px);
+    padding: 40px;
+    border-radius: 15px;
+    border: 1px solid rgba(0, 247, 255, 0.2);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+    width: 100%;
+    max-width: 400px;
+}
+
+.login-title {
+    color: var(--primary-color);
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 10px var(--glow-color);
+    letter-spacing: 2px;
+}
+
+.login-subtitle {
+    color: var(--text-color);
+    font-size: 1.1rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    opacity: 0.8;
+    letter-spacing: 1px;
+    line-height: 1.4;
+}
+
+.login-button-container {
+    width: 100%;
+}
+
+.google-login-btn {
+    width: 100%;
+    padding: 15px 25px;
+    background: rgba(6, 0, 40, 0.6);
+    border: 1px solid rgba(0, 247, 255, 0.3);
+    border-radius: 30px;
+    color: white;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4), 0 0 10px rgba(0, 247, 255, 0.2);
+}
+
+.google-login-btn::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
     width: 100%;
     height: 100%;
-    overflow: hidden;
+    background: conic-gradient(
+        transparent,
+        transparent,
+        transparent,
+        rgba(0, 247, 255, 0.2)
+    );
+    animation: borderRotate 4s linear infinite;
     z-index: -1;
+}
+
+.google-login-btn::after {
+    content: "";
+    position: absolute;
+    inset: 2px;
+    background: rgba(6, 0, 40, 0.8);
+    border-radius: 28px;
+    z-index: -1;
+}
+
+.google-login-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.6), 0 0 15px rgba(0, 247, 255, 0.3);
+}
+
+.google-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.planet-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: -1;
+    animation: orbit 60s linear infinite;
 }
 
 .kepler-452b {
     position: absolute;
-    width: min(1200px, 120vw); /* Responsive sizing */
-    height: min(1200px, 120vw); /* Responsive sizing */
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    width: min(1000px, 100vw);
+    height: min(1000px, 100vw);
     border-radius: 50%;
     background: radial-gradient(circle at 30% 30%,
         var(--planet-primary),
@@ -94,8 +228,22 @@ header {
         inset 0 0 60px rgba(34, 89, 195, 0.3),
         inset 0 0 30px rgba(22, 44, 127, 0.3),
         0 0 100px rgba(71, 145, 255, 0.2);
-    animation: planetRotate var(--rotation-speed) linear infinite;
     opacity: 0.7;
+    position: relative;
+}
+
+.kepler-452b::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: repeating-linear-gradient(rgba(0, 247, 255, 0.1) 0%, rgba(3, 0, 20, 0.2) 3%);
+    background-size: 100% 4px;
+    opacity: 0.1;
+    animation: hologramScan 8s linear infinite;
 }
 
 .planet-atmosphere {
@@ -114,244 +262,115 @@ header {
     animation: atmosphereGlow 8s ease-in-out infinite;
 }
 
-.surface-details {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    background: 
-        radial-gradient(circle at 70% 70%, 
-            rgba(71, 145, 255, 0.1) 0%,
-            transparent 50%),
-        radial-gradient(circle at 30% 30%, 
-            rgba(34, 89, 195, 0.1) 0%,
-            transparent 60%);
-    animation: surfaceMove 40s linear infinite;
-}
-
 .planet-rings {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 140%;
-    height: 140%;
-    transform: translate(-50%, -50%) rotate(20deg);
+    width: 120%;
+    height: 10px;
+    transform: translate(-50%, -50%) rotateX(75deg);
     border-radius: 50%;
-    box-shadow: 
-        0 0 20px rgba(71, 145, 255, 0.1),
-        0 0 40px rgba(34, 89, 195, 0.05);
-    filter: blur(5px);
-    opacity: 0.3;
+    border: 15px solid transparent;
+    border-top: 1px solid rgba(0, 247, 255, 0.2);
+    border-bottom: 1px solid rgba(0, 247, 255, 0.2);
+    box-shadow: 0 0 20px rgba(0, 247, 255, 0.2);
+    animation: ringRotate 30s linear infinite;
 }
 
-/* Stars */
-.stars {
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(15px);
+    padding: 15px 0;
+    text-align: center;
+    color: var(--text-color);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.2em;
+    z-index: 1000;
+    border-top: 1px solid rgba(0, 247, 255, 0.2);
+}
+
+footer p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.8);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+footer p span {
+    color: var(--primary-color);
+}
+
+.data-points {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     pointer-events: none;
+    z-index: -1;
 }
 
-.star {
+.data-point {
     position: absolute;
-    background: white;
+    width: 2px;
+    height: 2px;
+    background-color: var(--primary-color);
     border-radius: 50%;
-    animation: twinkle var(--duration, 4s) infinite ease-in-out;
-    box-shadow: 
-        0 0 2px #fff,
-        0 0 4px #fff,
-        0 0 6px rgba(71, 145, 255, 0.5);
+    opacity: 0.5;
+    box-shadow: 0 0 5px var(--primary-color);
+    animation: dataPointPulse 4s infinite;
 }
 
-/* Main Container - Responsive adjustments */
-.main-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    padding: 80px 20px 20px; /* Added horizontal padding */
-    width: 100%;
-}
-
-.login-container {
-    background: rgba(3, 0, 20, 0.85);
-    backdrop-filter: blur(15px);
-    padding: clamp(20px, 5vw, 40px); /* Responsive padding */
-    border-radius: 20px;
-    border: 1px solid rgba(71, 145, 255, 0.2);
-    box-shadow: 
-        0 0 30px rgba(71, 145, 255, 0.1),
-        inset 0 0 20px rgba(71, 145, 255, 0.05);
-    text-align: center;
-    position: relative;
-    z-index: 10;
-    max-width: min(400px, 90%); /* Responsive width */
-    width: 100%;
-}
-
-/* Animations */
 @keyframes planetRotate {
-    from {
-        transform: translate(-50%, -50%) rotate(0deg);
-    }
-    to {
-        transform: translate(-50%, -50%) rotate(360deg);
-    }
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes orbit {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
 @keyframes atmosphereGlow {
-    0%, 100% {
-        opacity: 0.5;
-        transform: scale(1);
-    }
-    50% {
-        opacity: 0.7;
-        transform: scale(1.05);
-    }
+    0%, 100% { opacity: 0.5; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.1); }
 }
 
-@keyframes surfaceMove {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(-360deg);
-    }
+@keyframes hologramScan {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 100%; }
 }
 
-@keyframes twinkle {
-    0%, 100% {
-        opacity: 0;
-        transform: scale(0.5);
-    }
-    50% {
-        opacity: 1;
-        transform: scale(1);
-    }
+@keyframes ringRotate {
+    0% { transform: translate(-50%, -50%) rotateX(75deg) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotateX(75deg) rotate(360deg); }
 }
 
-h1 {
-    font-size: clamp(1.5em, 5vw, 2em); /* Responsive font size */
-    margin-bottom: 20px;
-    color: var(--primary-color);
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    text-shadow: 0 0 10px var(--glow-color);
+@keyframes borderRotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
-.subtitle {
-    color: rgba(255, 255, 255, 0.7);
-    margin-bottom: 30px;
-    font-size: clamp(0.9em, 3vw, 1.1em); /* Responsive font size */
+@keyframes dataPointPulse {
+    0%, 100% { opacity: 0.2; }
+    50% { opacity: 0.6; }
 }
 
-#user-info {
-    display: none;
-    margin-top: 20px;
-}
-
-#user-image {
-    width: clamp(80px, 15vw, 100px); /* Responsive image size */
-    height: clamp(80px, 15vw, 100px); /* Responsive image size */
-    border-radius: 50%;
-    border: 2px solid var(--primary-color);
-    box-shadow: 0 0 20px var(--glow-color);
-}
-
-#user-name {
-    margin: 10px 0;
-    font-size: clamp(1em, 3vw, 1.2em); /* Responsive font size */
-    color: var(--primary-color);
-}
-
-#user-email {
-    color: rgba(255, 255, 255, 0.7);
-    margin-bottom: 20px;
-    font-size: clamp(0.8em, 2.5vw, 1em); /* Responsive font size */
-    word-break: break-word; /* Prevents email from overflowing */
-}
-
-.sign-out-btn {
-    background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
-    color: white;
-    border: none;
-    padding: clamp(8px, 2vw, 10px) clamp(15px, 4vw, 25px); /* Responsive padding */
-    border-radius: 25px;
-    cursor: pointer;
-    font-size: clamp(0.9em, 2.5vw, 1em); /* Responsive font size */
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.sign-out-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 247, 255, 0.3);
-}
-
-/* Media Queries for better responsiveness */
 @media (max-width: 768px) {
-    .logo img {
-        height: 40px;
+    .login-box {
+        margin: 20px;
+        padding: 30px;
     }
     
-    .kepler-452b {
-        width: 150vw;
-        height: 150vw;
+    .login-title {
+        font-size: 2rem;
     }
-}
 
-@media (max-width: 480px) {
-    .logo img {
-        height: 30px;
-    }
-    
-    header {
-        padding: 10px 0;
-    }
-    
-    .login-container {
-        padding: 20px;
-    }
-    
-    .planet-rings {
-        display: none; /* Hide rings on very small screens for better performance */
-    }
-}
-
-/* For large desktop screens (1920x1080 and up) */
-@media (min-width: 1920px) {
-    .container {
-        max-width: 1800px;
-    }
-    
-    .kepler-452b {
-        width: 1600px;
-        height: 1600px;
-    }
-    
-    .login-container {
-        max-width: 450px;
-        padding: 50px;
-    }
-}
-
-/* For better landscape orientation on tablets */
-@media (orientation: landscape) and (max-height: 768px) {
-    .main-container {
-        padding-top: 90px;
-    }
-    
-    .login-container {
-        padding: 20px;
-    }
-    
-    #user-image {
-        width: 70px;
-        height: 70px;
+    .login-subtitle {
+        font-size: 1rem;
     }
 }
