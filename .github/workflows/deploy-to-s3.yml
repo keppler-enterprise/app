@@ -3,7 +3,7 @@ name: Deploy to S3
 on:
   push:
     branches:
-      - main  # Cambia esto si usas otra rama para Producción
+      - main  # Cambia esto si usas otra rama para producción
 
 jobs:
   deploy:
@@ -21,8 +21,9 @@ jobs:
 
       - name: Deploy to S3
         run: |
-          aws s3 sync . s3://your-s3-bucket-name --delete --exclude ".git/*" --exclude ".github/*"
+          aws s3 sync . s3://$AWS_BUCKET_NAME --delete --exclude ".git/*" --exclude ".github/*"
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: us-east-1
+          AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
